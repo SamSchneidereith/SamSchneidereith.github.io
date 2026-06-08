@@ -30,21 +30,51 @@ function buildProjects() {
     /* ── OVERLAY ── */
     const writeupHTML = p.writeup.map(para => `<p>${para}</p>`).join('');
 
-    const mediaHTML = p.media
-      ? p.media.type === 'video'
-        ? `<div class="project-media">
-             <video controls src="${p.media.src}"></video>
-             ${p.media.alt ? `<p class="project-media-caption">${p.media.alt}</p>` : ''}
-           </div>`
-        : `<div class="project-media">
-             <img src="${p.media.src}" alt="${p.media.alt || ''}">
-             ${p.media.alt ? `<p class="project-media-caption">${p.media.alt}</p>` : ''}
-           </div>`
-      : '';
+    const mediaHTML = (() => {
+      if (!p.media || !p.media.length) return '';
+      
+      let html = '';
+      let i = 0;
+      
+      while (i < p.media.length) {
+        const m = p.media[i];
+        
+        if (m.layout === 'half' && p.media[i + 1]?.layout === 'half') {
+          // Pair them in a row
+          const m2 = p.media[i + 1];
+          html += `<div class="project-media-row">
+            <div class="project-media half">
+              <img src="${m.src}" alt="${m.alt || ''}">
+              ${m.alt ? `<p class="project-media-caption">${m.alt}</p>` : ''}
+            </div>
+            <div class="project-media half">
+              <img src="${m2.src}" alt="${m2.alt || ''}">
+              ${m2.alt ? `<p class="project-media-caption">${m2.alt}</p>` : ''}
+            </div>
+          </div>`;
+          i += 2;
+        } else {
+          // Full width
+          html += m.type === 'video'
+            ? `<div class="project-media">
+                <video controls src="${m.src}"></video>
+                ${m.alt ? `<p class="project-media-caption">${m.alt}</p>` : ''}
+              </div>`
+            : `<div class="project-media">
+                <img src="${m.src}" alt="${m.alt || ''}">
+                ${m.alt ? `<p class="project-media-caption">${m.alt}</p>` : ''}
+              </div>`;
+          i++;
+        }
+      }
+      return html;
+    })();
 
     const pdfHTML = p.pdf
-      ? `<iframe src="${p.pdf}" width="100%" height="600px" style="border:none; border-radius:8px;"></iframe>`
-      : `<div class="project-pdf-placeholder">${p.pdfLabel}</div>`;
+      ? `<a href="${p.pdf}" target="_blank" class="project-pdf-placeholder project-pdf-active" style="text-decoration:none; display:block;">View PDF ↗</a>`
+      : p.pdfLabel
+      ? `<div class="project-pdf-placeholder project-pdf-soon">${p.pdfLabel}</div>`
+      : '';
 
     const tagsHTML = p.tags.map(t => `<span class="tag">${t}</span>`).join('');
 

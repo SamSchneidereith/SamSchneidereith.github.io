@@ -26,7 +26,7 @@ const SKILLS = [
   {
     name: 'ROS / OpenCV',
     level: 'Project experience',
-    proficiency: 62,
+    proficiency: 42,
     projects: ['SHELL Docking Tunnel'],
   },
   {
@@ -45,6 +45,6 @@ const SKILLS = [
     name: 'French',
     level: 'Written & spoken fluency',
     proficiency: 80,
-    projects: ['Self-taught', 'UMD French Language Org President'],
+    projects: ['Self-taught', 'UMD French Language Org. President'],
   },
 ];

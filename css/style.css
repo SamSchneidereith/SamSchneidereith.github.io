@@ -391,6 +391,47 @@ section { position: relative; }
   margin: 32px 0;
 }
 
+.project-media {
+  margin: 24px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.project-media img,
+.project-media video {
+  max-width: 100%;
+  max-height: 480px;
+  width: auto;
+  height: auto;
+  border-radius: var(--radius-md);
+  display: block;
+}
+
+.project-media-caption {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  text-align: center;
+}
+
+.project-media-row {
+  display: flex;
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.project-media.half {
+  flex: 1;
+  margin: 0;
+}
+
+.project-media.half img {
+  max-height: 320px;
+  width: 100%;
+  object-fit: cover;
+}
+
 .project-pdf-placeholder {
   background: var(--surface);
   border: 0.5px solid var(--border);
@@ -399,6 +440,22 @@ section { position: relative; }
   text-align: center;
   font-size: 13px;
   color: var(--text-tertiary);
+}
+
+.project-pdf-soon {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.project-pdf-active {
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+  color: var(--text-secondary);
+}
+
+.project-pdf-active:hover {
+  background: var(--border);
+  border-color: var(--border-mid);
 }
 
 /* ── SKILLS ── */

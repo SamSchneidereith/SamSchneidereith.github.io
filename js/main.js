@@ -71,7 +71,7 @@ function buildProjects() {
     })();
 
     const pdfHTML = p.pdf
-      ? `<a href="${p.pdf}" target="_blank" class="project-pdf-placeholder project-pdf-active" style="text-decoration:none; display:block;">View PDF ↗</a>`
+      ? `<a href="${p.pdf}" target="_blank" class="project-pdf-placeholder project-pdf-active" style="text-decoration:none; display:block;">View PDF ↗︎</a>`
       : p.pdfLabel
       ? `<div class="project-pdf-placeholder project-pdf-soon">${p.pdfLabel}</div>`
       : '';
@@ -83,7 +83,7 @@ function buildProjects() {
     overlay.id = `page-${p.id}`;
     overlay.innerHTML = `
       <button class="project-page-close" onclick="closeProject('${p.id}')">← Back</button>
-      ${p.github ? `<a class="project-page-github" href="${p.github}" target="_blank">GitHub ↗</a>` : ''}
+      ${p.github ? `<a class="project-page-github" href="${p.github}" target="_blank">GitHub ↗︎</a>` : ''}
       <div class="project-hero-img">
       <img src="${p.heroImage ?? p.image}" alt="${p.fullTitle}" onerror="this.style.display='none'">        <span style="display:none">full-bleed project photo</span>
       </div>

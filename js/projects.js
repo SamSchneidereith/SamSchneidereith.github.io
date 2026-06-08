@@ -53,7 +53,7 @@ const PROJECTS = [
     title: 'Stewart Platform',
     fullTitle: 'Servo-Actuated Stewart Platform',
     date: 'June 2026',
-    progress: 80,
+    progress: 75,
     image: 'media/StewartPlatform.png',
     heroImage: 'media/StewartPlatform2.png',
     github: 'https://github.com/SamSchneidereith/stewart-platform',

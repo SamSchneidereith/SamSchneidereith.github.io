@@ -339,10 +339,11 @@ section { position: relative; }
 }
 
 .project-hero-img img {
-  /* width: 100%; */
-  width: 50%;
+  width: 100%;
+  /* width: 50%; */
   height: 100%;
-  object-fit: cover;
+  /* object-fit: cover; */
+  object-fit: contain;
 }
 
 .project-page-content {

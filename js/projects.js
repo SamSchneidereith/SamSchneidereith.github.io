@@ -6,7 +6,7 @@ const PROJECTS = [
     date: 'April 2026',
     progress: 100,         // 0–100; >= 80 renders green, else yellow
     image: 'media/RRTstar.png',
-    heroImage: 'media/ExampleTrajectory.png',
+    // heroImage: 'media/ExampleTrajectory.png',
     github: 'https://github.com/SamSchneidereith/uncertainty-aware-path-planning-for-SP',
     summary: 'Aerospace honors thesis developing an uncertainty-aware motion planning framework for Stewart platforms, using an Extended Kalman Filter and RRT# to find trajectories that minimize estimation uncertainty.',
     tags: ['Python', 'MATLAB', 'EKF', 'RRT#', 'Motion Planning', 'State Estimation', 'Stewart Platform IK'],
@@ -18,6 +18,7 @@ const PROJECTS = [
       'When uncertainty was used as the optimization metric instead of path length, the planner successfully identified trajectories with progressively lower estimation uncertainty over time. The most significant finding was that path length and path uncertainty are not strongly correlated — the uncertainty-minimizing planner found paths that were geometrically distinct from the shortest-path solutions, sometimes longer, sometimes shorter. This suggests that uncertainty-aware planning must be treated as its own optimization objective rather than an approximation of path length.',
     ],
     media: [
+      {type: 'image', src: 'media/ExampleTrajectory.png', alt: '', layout: 'full'}, 
       {type: 'image', src: 'media/CostVsTime.png', alt: '', layout: 'half'}, 
       {type: 'image', src: 'media/DistVsTime.png', alt: '', layout: 'half'},  
     ],      // { type: 'image'|'video', src: 'path/or/url', alt: 'caption' }

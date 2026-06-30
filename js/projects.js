@@ -75,22 +75,22 @@ const PROJECTS = [
     pdfLabel: 'PDF — coming soon',
   },
 
-  {
-    id: 'reactionwheel',
-    title: 'Reaction Wheel Pendulum',
-    fullTitle: 'Reaction Wheel Stabilized Inverted Pendulum',
-    date: 'In progress',
-    progress: 25,
-    image: 'media/reactionwheel.jpg',
-    summary: 'LQR/PID stabilized inverted pendulum using a reaction wheel for active torque control.',
-    tags: ['C++', 'LQR / PID', 'State-Space', 'Embedded', 'Control Theory'],
-    writeup: [
-      'An active controls project in development. A reaction wheel provides the stabilizing torque for an inverted pendulum — implementing state-space modeling, LQR controller design, and real-time embedded execution.',
-    ],
-    media: null,
-    pdf: null,
-    pdfLabel: 'In development — check back soon',
-  },
+  // {
+  //   id: 'reactionwheel',
+  //   title: 'Reaction Wheel Pendulum',
+  //   fullTitle: 'Reaction Wheel Stabilized Inverted Pendulum',
+  //   date: 'In progress',
+  //   progress: 25,
+  //   image: 'media/reactionwheel.jpg',
+  //   summary: 'LQR/PID stabilized inverted pendulum using a reaction wheel for active torque control.',
+  //   tags: ['C++', 'LQR / PID', 'State-Space', 'Embedded', 'Control Theory'],
+  //   writeup: [
+  //     'An active controls project in development. A reaction wheel provides the stabilizing torque for an inverted pendulum — implementing state-space modeling, LQR controller design, and real-time embedded execution.',
+  //   ],
+  //   media: null,
+  //   pdf: null,
+  //   pdfLabel: 'In development — check back soon',
+  // },
 
   // {
   //   id: 'skycrane',

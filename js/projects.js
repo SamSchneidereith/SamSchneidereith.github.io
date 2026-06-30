@@ -44,7 +44,9 @@ const PROJECTS = [
       'The control system was open-loop — cable lengths were commanded without closed-loop feedback on end-effector pose. Cable spooling inconsistencies introduced length errors on the order of 1–2.5 cm, roughly 5% of nominal cable length, which was acceptable for prototype-level validation. Given additional development time, the vision system would have been integrated as a feedback source for closed-loop pose control.',
       'Below is an excerpt of my individual contributions from the team\'s full report.'
     ],
-    media: null,
+    media: [
+      { type: 'youtube', src: 'EUqyI62oerk', alt: 'Stewart platform precession demo' },
+    ],
     pdf: 'pdfs/SHELL_SchneidereithContributions.pdf',
     pdfLabel: 'PDF — coming soon',
   },
@@ -66,28 +68,29 @@ const PROJECTS = [
       'Smooth trajectories are achieved through linear pose interpolation at 50 Hz — the current pose and target pose are interpolated over N steps, with IK solved at each intermediate pose. Two continuous motion sequences were implemented: a flat circular precession where the platform centroid traces a horizontal circle, and an angled gyroscopic precession that combines translational and angular circular motion to simulate a precessing gyroscope.',
       'The firmware is structured into well-separated layers from I2C primitives up to named motion sequences, making the codebase straightforward to extend. Future work includes deriving a closed-form IK solution for reduced latency, implementing S-curve velocity profiles to eliminate endpoint discontinuities, and mounting an IMU to close the control loop for active stabilization.',
     ],
-    // media: [{type: 'video', src: 'media/StewartPlatformAnimation.mp4', alt: 'Platform Animation'}],
-    media: [],
+    media: [
+      // { type: 'youtube', src: 'EUqyI62oerk', alt: 'Stewart platform precession demo' },
+    ],
     pdf: 'pdfs/Servo_Actuated_Stewart_Platform.pdf',
     pdfLabel: 'PDF — coming soon',
   },
 
-  // {
-  //   id: 'reactionwheel',
-  //   title: 'Reaction Wheel Pendulum',
-  //   fullTitle: 'Reaction Wheel Stabilized Inverted Pendulum',
-  //   date: 'In progress',
-  //   progress: 40,
-  //   image: 'media/reactionwheel.jpg',
-  //   summary: 'LQR/PID stabilized inverted pendulum using a reaction wheel for active torque control.',
-  //   tags: ['C++', 'LQR / PID', 'State-Space', 'Embedded', 'Control Theory'],
-  //   writeup: [
-  //     'An active controls project in development. A reaction wheel provides the stabilizing torque for an inverted pendulum — implementing state-space modeling, LQR and PID controller design, and real-time embedded execution.',
-  //   ],
-  //   media: null,
-  //   pdf: null,
-  //   pdfLabel: 'In development — check back soon',
-  // },
+  {
+    id: 'reactionwheel',
+    title: 'Reaction Wheel Pendulum',
+    fullTitle: 'Reaction Wheel Stabilized Inverted Pendulum',
+    date: 'In progress',
+    progress: 25,
+    image: 'media/reactionwheel.jpg',
+    summary: 'LQR/PID stabilized inverted pendulum using a reaction wheel for active torque control.',
+    tags: ['C++', 'LQR / PID', 'State-Space', 'Embedded', 'Control Theory'],
+    writeup: [
+      'An active controls project in development. A reaction wheel provides the stabilizing torque for an inverted pendulum — implementing state-space modeling, LQR controller design, and real-time embedded execution.',
+    ],
+    media: null,
+    pdf: null,
+    pdfLabel: 'In development — check back soon',
+  },
 
   // {
   //   id: 'skycrane',
@@ -108,19 +111,19 @@ const PROJECTS = [
   // },
 
   // {
-  //   id: 'waverider',
-  //   title: 'Mach 10 Hypersonic Waverider',
-  //   fullTitle: 'Mach 10 Hypersonic Waverider',
-  //   date: 'May 2025',
-  //   progress: 100,
-  //   image: 'media/waverider.jpg',
-  //   summary: 'Aerodynamic shape optimization for a Mach 10 boost-glide waverider using shock relations and CFD simulation.',
-  //   tags: ['MATLAB', 'CFD', 'Shock Relations', 'Trajectory Analysis', 'Aerodynamics'],
-  //   writeup: [
-  //     'Designed a Mach 10 hypersonic waverider, optimizing aerodynamic shape and orientation for maximum trajectory distance using analytical methods and shock relation analysis. Simulated boost-glide trajectory and aerodynamic performance with CFD.',
-  //   ],
-  //   media: null,
-  //   pdf: null,
-  //   pdfLabel: 'Report — coming soon',
+    // id: 'waverider',
+    // title: 'Mach 10 Hypersonic Waverider',
+    // fullTitle: 'Mach 10 Hypersonic Waverider',
+    // date: 'May 2025',
+    // progress: 100,
+    // image: 'media/waverider.jpg',
+    // summary: 'Aerodynamic shape optimization for a Mach 10 boost-glide waverider using shock relations and CFD simulation.',
+    // tags: ['MATLAB', 'CFD', 'Shock Relations', 'Trajectory Analysis', 'Aerodynamics'],
+    // writeup: [
+    //   'Designed a Mach 10 hypersonic waverider, optimizing aerodynamic shape and orientation for maximum trajectory distance using analytical methods and shock relation analysis. Simulated boost-glide trajectory and aerodynamic performance with CFD.',
+    // ],
+    // media: null,
+    // pdf: null,
+    // pdfLabel: 'Report — coming soon',
   // },
 ];

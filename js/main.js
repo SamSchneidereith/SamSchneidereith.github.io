@@ -44,26 +44,21 @@ function buildProjects() {
           const m2 = p.media[i + 1];
           html += `<div class="project-media-row">
             <div class="project-media half">
-              <img src="${m.src}" alt="${m.alt || ''}">
+              ${renderMediaItem(m)}
               ${m.alt ? `<p class="project-media-caption">${m.alt}</p>` : ''}
             </div>
             <div class="project-media half">
-              <img src="${m2.src}" alt="${m2.alt || ''}">
+              ${renderMediaItem(m2)}
               ${m2.alt ? `<p class="project-media-caption">${m2.alt}</p>` : ''}
             </div>
           </div>`;
           i += 2;
         } else {
           // Full width
-          html += m.type === 'video'
-            ? `<div class="project-media">
-                <video controls src="${m.src}"></video>
-                ${m.alt ? `<p class="project-media-caption">${m.alt}</p>` : ''}
-              </div>`
-            : `<div class="project-media">
-                <img src="${m.src}" alt="${m.alt || ''}">
-                ${m.alt ? `<p class="project-media-caption">${m.alt}</p>` : ''}
-              </div>`;
+          html += `<div class="project-media">
+              ${renderMediaItem(m)}
+              ${m.alt ? `<p class="project-media-caption">${m.alt}</p>` : ''}
+            </div>`;
           i++;
         }
       }
@@ -163,6 +158,38 @@ function buildSkills() {
     `;
     grid.appendChild(row);
   });
+}
+
+/* ── Media rendering helpers ── */
+
+/* Accepts a raw YouTube video ID or a full youtube.com/youtu.be URL and
+   returns a privacy-friendly embed URL. Unlisted videos work fine here. */
+function getYouTubeEmbedUrl(src) {
+  let id = src;
+  const watchMatch = src.match(/[?&]v=([^&]+)/);
+  const shortMatch = src.match(/youtu\.be\/([^?&]+)/);
+  const embedMatch = src.match(/youtube\.com\/embed\/([^?&]+)/);
+  if (watchMatch) id = watchMatch[1];
+  else if (shortMatch) id = shortMatch[1];
+  else if (embedMatch) id = embedMatch[1];
+  return `https://www.youtube-nocookie.com/embed/${id}`;
+}
+
+/* Renders the inner element for a single media item — image, local video,
+   or YouTube embed. Used by both full-width and half-width layouts. */
+function renderMediaItem(m) {
+  if (m.type === 'youtube') {
+    const embedUrl = getYouTubeEmbedUrl(m.src);
+    return `<div class="video-embed">
+      <iframe src="${embedUrl}" title="${m.alt || ''}" frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen></iframe>
+    </div>`;
+  }
+  if (m.type === 'video') {
+    return `<video controls src="${m.src}"></video>`;
+  }
+  return `<img src="${m.src}" alt="${m.alt || ''}">`;
 }
 
 /* ── Init ── */

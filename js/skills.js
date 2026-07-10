@@ -3,7 +3,7 @@ const SKILLS = [
     name: 'Python',
     level: 'Proficient',
     proficiency: 82,
-    projects: ['SHELL Docking Tunnel', 'Stewart Platform', 'Honors Thesis'],
+    projects: ['Orbit Collision Detection Sim ','SHELL Docking Tunnel', 'Stewart Platform', 'Honors Thesis'],
   },
   {
     name: 'MATLAB',
@@ -38,9 +38,20 @@ const SKILLS = [
   {
     name: 'Git / GitHub',
     level: 'Learning',
-    proficiency: 38,
+    proficiency: 45,
     projects: ['All projects'],
   },
+  {
+    name: 'Publish-Subscribe Architecture',
+    level: 'Learning',
+    proficiency: 45,
+    projects: ['Orbit Collision Detection Sim'],
+  },
+  { 
+    name: 'Docker',
+    level: 'Learning',
+    proficiency: 38,
+    projects: ['Orbit Collision Detection Sim'],},
   {
     name: 'French',
     level: 'Written & spoken fluency',

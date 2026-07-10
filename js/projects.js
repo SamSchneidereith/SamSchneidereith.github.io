@@ -52,11 +52,37 @@ const PROJECTS = [
   },
 
   {
+    id: 'orbitsim',
+    title: 'Satellite Conjunction Detection',
+    fullTitle: 'Distributed Satellite Tracking & Conjunction Detection System',
+    date: 'In progress',
+    progress: 75,           // core sim/track/detect/visualize pipeline works end to end;
+                            // collision-probability scoring and maneuver planning are stubbed
+    image: 'media/multipleConjunctionsNoBackground.png',
+    github: 'https://github.com/SamSchneidereith/orbit-collision-detection-simulation',
+    summary: 'A Dockerized, message-passing pipeline that simulates a satellite constellation, filters noisy telemetry through per-satellite Extended Kalman Filters, and automatically screens for close approaches.',
+    tags: ['Python', 'Docker', 'Extended Kalman Filter', 'Orbital Mechanics', 'RabbitMQ'],
+    writeup: [
+      'Modern satellite operations increasingly rely on automated conjunction assessment — continuously tracking a constellation\'s members and flagging close approaches ("conjunctions") before they become collisions. This project is a distributed system that simulates a small satellite constellation, estimates each satellite\'s state from noisy telemetry, and screens every pair of orbits for close approaches in real time, structured the way an operational ground segment separates propagation, orbit determination, and conjunction assessment into independent services.',
+      'The system runs as four Dockerized microservices connected over a RabbitMQ message broker: a simulator that propagates true satellite motion and emits noisy telemetry, a tracker that filters that telemetry into state estimates, an application service that screens for conjunctions, and a live 3D plotter. Decoupling the pipeline this way means each service can be scaled, restarted, or swapped independently — the tracker doesn\'t know or care how the simulator generates telemetry, only that it arrives on a queue.',
+      'The simulator initializes a five-satellite constellation from classical orbital elements (semi-major axis, eccentricity, inclination, RAAN, argument of perigee, true anomaly) converted to Cartesian state, then propagates each satellite forward under two-body gravity using 4th-order Runge-Kutta integration. Each satellite publishes position telemetry corrupted with sensor noise at a randomized 5–15 second cadence, mimicking the asynchronous tasking of real ground-based tracking sensors. The dynamics module is structured to add J2 oblateness and atmospheric drag perturbations next.',
+      'The tracker spins up an independent Extended Kalman Filter per satellite on first contact. Each filter\'s predict step propagates the state estimate with the same RK4 integrator and propagates covariance using an analytically derived state transition Jacobian of the two-body gravity gradient; the update step assimilates the noisy position telemetry with a standard EKF gain. Comparing filter output against the simulator\'s hidden ground-truth channel validated that the 3σ covariance envelope correctly bounds the true trajectory, and that the filter re-converges cleanly after an intentionally poor initial velocity guess.',
+      'The application service maintains a live track database, propagates a snapshot of every tracked satellite forward across a several-thousand-second projection window, and checks all pairwise combinations at each timestep for a miss distance under a threshold — recording the time and distance of closest approach for anything that qualifies. Flagged conjunctions are highlighted in the live 3D visualization alongside the constellation. Turning miss distance into an actual probability of collision from the combined covariance, and automatically planning an avoidance maneuver once a conjunction is confirmed, are scaffolded in the code but not yet wired in — the next milestones.',
+    ],
+    media: [
+      {type: 'image', src: 'media/orbitsim-ekf1.png', alt: 'EKF tracker estimate vs. ground truth (x/y/z) with 3σ bounds', layout: 'half'},
+      {type: 'image', src: 'media/orbitsim-ekf2.png', alt: 'EKF estimate re-converging after an intentionally poor initial velocity guess', layout: 'half'},
+    ],
+    pdf: null,
+    pdfLabel: 'Report — coming soon',
+  },
+
+  {
     id: 'stewart',
     title: 'Stewart Platform',
     fullTitle: 'Servo-Actuated Stewart Platform',
     date: 'June 2026',
-    progress: 75,
+    progress: 100,
     image: 'media/StewartPlatform.png',
     heroImage: 'media/StewartPlatform2.png',
     github: 'https://github.com/SamSchneidereith/stewart-platform',

@@ -47,8 +47,8 @@ const PROJECTS = [
       'The next steps are to turn miss distance into an actual probability of collision from the combined covariance, and automatically planning an avoidance maneuver once a conjunction is confirmed. These are scaffolded in the code but not yet coded. At the moment I am currently deciding how avoidance maneuvers should be decided. The most obvious approach is to raise and lower satellite altitudes similarly to TCAS commands in airplanes. This would be most efficient if done half a period before the conjunction via a prograde/retrograde burn. If a conjunction comes up later than half a period before conjunction, radial in/out burns would be advantageous, though more aggressive in orbit deformation, likely having to be undone later on. Another solution would be to change inclination through a normal/antinormal burn but this could more easily set the satellite on a trajectory that intersects other orbits. I am currently debating what the best way to approach this planning may be. Maneuver commands will be sent through the already integrated \'maneuver\' queue parametrized by burn duration, vector direction and start time. The thrust acceleration will likely be a satellite attribute and will be based on standard hall-effect engine thrusts and telecommunication satellite masses.',
     ],
     media: [
-      {type: 'image', src: 'media/orbitsim-EKF1.png', alt: 'EKF tracker estimate vs. ground truth (x/y/z) with 3σ bounds. Assumes much process noise', layout: 'half'},
-      {type: 'image', src: 'media/orbitsim-EKF2.png', alt: 'EKF estimate re-converging after an intentionally poor initial velocity guess', layout: 'half'},
+      {type: 'image', src: 'media/orbitsim-EKF1.png', alt: 'EKF tracker estimate vs. ground truth (x/y/z) with 3σ bounds. Assumes excessive process noise.', layout: 'half'},
+      {type: 'image', src: 'media/orbitsim-EKF2.png', alt: 'EKF estimate converging after an intentionally poor initial velocity guess with more realistic process noise used.', layout: 'half'},
     ],
     pdf: null,
     pdfLabel: 'Report — coming soon',

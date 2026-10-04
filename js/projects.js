@@ -56,7 +56,7 @@ const PROJECTS = [
     id: 'stewart',
     title: 'Stewart Platform',
     fullTitle: 'Servo-Actuated Stewart Platform',
-    date: 'June 2026',
+    date: 'August 2026',//June 2026',
     progress: 100,
     image: 'media/stewart-StewartPlatform.png',
     heroImage: 'media/stewart-StewartPlatform2.png',

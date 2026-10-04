@@ -30,40 +30,32 @@ function buildProjects() {
     /* ── OVERLAY ── */
     const writeupHTML = p.writeup.map(para => `<p>${para}</p>`).join('');
 
-    const mediaHTML = (() => {
-      if (!p.media || !p.media.length) return '';
-      
-      let html = '';
-      let i = 0;
-      
-      while (i < p.media.length) {
-        const m = p.media[i];
-        
-        if (m.layout === 'half' && p.media[i + 1]?.layout === 'half') {
-          // Pair them in a row
-          const m2 = p.media[i + 1];
-          html += `<div class="project-media-row">
-            <div class="project-media half">
-              ${renderMediaItem(m)}
-              ${m.alt ? `<p class="project-media-caption">${m.alt}</p>` : ''}
+    const mediaHTML = (!p.media || !p.media.length) ? '' : `
+      <div class="carousel" data-carousel>
+        <div class="carousel-track" tabindex="0">
+          ${p.media.map(m => `
+            <figure class="carousel-slide">
+              <div class="carousel-frame">
+                ${m.type === 'video'
+                  ? `<video controls playsinline src="${m.src}"></video>`
+                  : m.type === 'youtube'
+                  ? `<iframe src="${getYouTubeEmbedUrl(m.src)}" title="${m.alt || 'Project video'}" loading="lazy" allowfullscreen></iframe>`
+                  : `<img src="${m.src}" alt="${m.alt || ''}" loading="lazy">`}
+              </div>
+              ${m.alt ? `<figcaption>${m.alt}</figcaption>` : ''}
+            </figure>`).join('')}
+        </div>
+        ${p.media.length > 1 ? `
+          <div class="carousel-controls">
+            <div class="carousel-dots">
+              ${p.media.map((_, i) => `<button class="carousel-dot${i === 0 ? ' active' : ''}" aria-label="Go to slide ${i + 1}"></button>`).join('')}
             </div>
-            <div class="project-media half">
-              ${renderMediaItem(m2)}
-              ${m2.alt ? `<p class="project-media-caption">${m2.alt}</p>` : ''}
+            <div class="carousel-arrows">
+              <button class="carousel-arrow prev" aria-label="Previous">‹</button>
+              <button class="carousel-arrow next" aria-label="Next">›</button>
             </div>
-          </div>`;
-          i += 2;
-        } else {
-          // Full width
-          html += `<div class="project-media">
-              ${renderMediaItem(m)}
-              ${m.alt ? `<p class="project-media-caption">${m.alt}</p>` : ''}
-            </div>`;
-          i++;
-        }
-      }
-      return html;
-    })();
+          </div>` : ''}
+      </div>`;
 
     const pdfHTML = p.pdf
       ? `<a href="${p.pdf}" target="_blank" class="project-pdf-placeholder project-pdf-active" style="text-decoration:none; display:block;">View PDF ↗︎︎︎</a>`
@@ -85,8 +77,8 @@ function buildProjects() {
       <div class="project-page-content">
         <h1 class="project-page-title">${p.fullTitle}</h1>
         <div class="project-tags">${tagsHTML}</div>
-        <div class="project-page-body">${writeupHTML}</div>
         ${mediaHTML}
+        <div class="project-page-body">${writeupHTML}</div>
         <div class="project-page-divider"></div>
         ${pdfHTML}
       </div>
@@ -118,6 +110,8 @@ function openProject(id) {
   document.body.style.paddingRight = `${scrollbarWidth}px`;
   document.body.style.overflow = 'hidden';
   overlay.scrollTop = 0;
+  overlay.scrollTop = 0;
+  overlay.querySelectorAll('[data-carousel]').forEach(c => c._update?.());
 }
 
 function closeProject(id) {
@@ -175,8 +169,7 @@ function getYouTubeEmbedUrl(src) {
   return `https://www.youtube-nocookie.com/embed/${id}`;
 }
 
-/* Renders the inner element for a single media item — image, local video,
-   or YouTube embed. Used by both full-width and half-width layouts. */
+/* Renders the inner element for a single media item — image, local video, or YouTube embed.*/
 function renderMediaItem(m) {
   if (m.type === 'youtube') {
     const embedUrl = getYouTubeEmbedUrl(m.src);
@@ -192,7 +185,50 @@ function renderMediaItem(m) {
   return `<img src="${m.src}" alt="${m.alt || ''}">`;
 }
 
+/* ── Media carousels ── */
+function initCarousels() {
+  document.querySelectorAll('[data-carousel]').forEach(c => {
+    const track  = c.querySelector('.carousel-track');
+    const slides = [...track.children];
+    const dots   = [...c.querySelectorAll('.carousel-dot')];
+    const prev   = c.querySelector('.prev');
+    const next   = c.querySelector('.next');
+    let index = 0;
+
+    const goTo = i => {
+      i = Math.max(0, Math.min(i, slides.length - 1));
+      const s = slides[i];
+      const left = s.offsetLeft - (track.clientWidth - s.offsetWidth) / 2;
+      track.scrollTo({ left, behavior: 'smooth' });   // browser clamps at the ends
+    };
+
+    const update = () => {
+      if (!track.clientWidth) return;   // overlay hidden, nothing to measure yet
+      const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
+      const mid = track.scrollLeft + track.clientWidth / 2;
+      let nearest = 0, best = Infinity;
+      slides.forEach((s, i) => {
+        const d = Math.abs(s.offsetLeft + s.offsetWidth / 2 - mid);
+        if (d < best) { best = d; nearest = i; }
+      });
+      index = atEnd ? slides.length - 1 : nearest;
+      dots.forEach((d, i) => d.classList.toggle('active', i === index));
+      if (prev) prev.disabled = index === 0;
+      if (next) next.disabled = index === slides.length - 1;
+      slides.forEach((s, i) => { if (i !== index) s.querySelector('video')?.pause(); });
+    };
+
+    track.addEventListener('scroll', update, { passive: true });
+    c._update = update;                 // so openProject can re-sync it
+    dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
+    prev?.addEventListener('click', () => goTo(index - 1));
+    next?.addEventListener('click', () => goTo(index + 1));
+    update();
+  });
+}
+
 /* ── Init ── */
 buildProjects();
+initCarousels();
 buildSkills();
 initReveal();

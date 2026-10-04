@@ -18,11 +18,63 @@ const PROJECTS = [
       'When uncertainty was used as the optimization metric instead of path length, the planner successfully identified trajectories with progressively lower estimation uncertainty over time. The most significant finding was that path length and path uncertainty are not strongly correlated. The uncertainty-minimizing planner found paths that were geometrically distinct from the shortest-path solutions, sometimes longer, sometimes shorter. This suggests that uncertainty-aware planning must be treated as its own optimization objective rather than an approximation of path length.',
     ],
     media: [
-      {type: 'image', src: 'media/thesis-ExampleTrajectory.png', alt: '', layout: 'full'}, 
-      {type: 'image', src: 'media/thesis-CostVsTime.png', alt: '', layout: 'half'}, 
-      {type: 'image', src: 'media/thesis-DistVsTime.png', alt: '', layout: 'half'},  
-    ],      // { type: 'image'|'video', src: 'path/or/url', alt: 'caption' }
-    pdf: 'pdfs/Uncertainty_Aware_Path_Planning_for_Stewart_Platforms.pdf',             // replace with 'pdfs/thesis.pdf' when ready
+      {type: 'image', src: 'media/thesis-ExampleTrajectory.png', alt: 'Example planned trajectory in 6-DOF configuration space'}, 
+      {type: 'image', src: 'media/thesis-CostVsTime.png', alt: 'Cost vs. Time'}, 
+      {type: 'image', src: 'media/thesis-DistVsTime.png', alt: 'Distance vs. Time'},  
+    ],
+    pdf: 'pdfs/Uncertainty_Aware_Path_Planning_for_Stewart_Platforms.pdf',
+    pdfLabel: 'PDF — coming soon',
+  },
+
+  {
+    id: 'shell',
+    title: 'SHELL Docking Tunnel',
+    fullTitle: 'SHELL — Softgoods Habitat Entry & Lunar Logistics',
+    date: 'May 2026',
+    progress: 100,
+    image: 'media/shell-shell.png',
+    heroImage: 'media/shell-shell2.png',
+    summary: '6DOF softgoods articulating docking tunnel with embedded IK, stepper control, and real-time vision pipeline.',
+    tags: ['C++', 'Arduino', 'Python', 'OpenCV', 'ROS', 'Stewart Platform IK', 'Serial Comms', 'SE(3) Transforms', 'AccelStepper Library'],
+    writeup: [
+      'SHELL (Softgoods Habitat Entry and Lunar Logistics) was a 20-person senior capstone project developing an eighth-scale prototype of a pressurized, articulating softgoods docking tunnel designed for crew transfer between habitats and rovers on the lunar and Martian surface. The tunnel is driven by a cable-actuated Stewart platform mechanism, enabling full six-degree-of-freedom motion of the docking hatch.',
+      'I owned the complete embedded software stack. Motor control was implemented in C++ on an Arduino Mega 2560, commanding six NEMA 17 closed-loop stepper motors through dedicated stepper drivers. Each motor drove a cable spool through a 20:1 planetary gearbox, yielding an effective linear resolution of approximately 0.008 mm per step — critical for the precision required in docking maneuvers. All six motors were coordinated simultaneously using the AccelStepper and MultiStepper libraries, ensuring cables reached their target lengths in unison and avoiding slack.',
+      'Communication between the embedded controller and the host computer was handled over USB serial at 115200 baud. A Python-based trajectory generation program computed desired end-effector poses, converted them to cable lengths via inverse kinematics, and transmitted them to the Arduino as ASCII packets. A blocking acknowledgement scheme ensured sequential commands were executed in order, preventing buffer overrun during long trajectories.',
+      'I also developed the real-time vision pipeline using OpenCV and ROS. The system detected AprilTag fiducial markers mounted around the docking hatch rim and estimated the six-degree-of-freedom pose of the hatch relative to the docking platform. Coordinate transformations between the camera frame, tag frame, hatch frame, and platform measurement frame were managed using homogeneous transformation matrices, with the overall pipeline compliant with NASA International Docking System Standard (IDSS) conventions.',
+      'The control system was open-loop — cable lengths were commanded without closed-loop feedback on end-effector pose. Cable spooling inconsistencies introduced length errors on the order of 1–2.5 cm, roughly 5% of nominal cable length, which was acceptable for prototype-level validation. Given additional development time, the vision system would have been integrated as a feedback source for closed-loop pose control.',
+      'Below is an excerpt of my individual contributions from the team\'s full report.'
+    ],
+    media: [
+      { type: 'image', src: 'media/CapstoneDesignExpo.png', alt: 'Presenting at the Capstone Design Expo' },
+      { type: 'youtube', src: 'EUqyI62oerk', alt: 'Prototype Docking Tunnel — Extension Demo' },
+    ],
+    pdf: 'pdfs/SHELL_SchneidereithContributions.pdf',
+    pdfLabel: 'PDF — coming soon',
+  },
+
+  {
+    id: 'stewart',
+    title: 'Stewart Platform',
+    fullTitle: 'Servo-Actuated Stewart Platform',
+    date: 'June 2026',
+    progress: 100,
+    image: 'media/stewart-StewartPlatform.png',
+    heroImage: 'media/stewart-StewartPlatform2.png',
+    github: 'https://github.com/SamSchneidereith/stewart-platform',
+    summary: 'Personal 6DOF Stewart platform built from scratch — mechanical design, layered embedded C++ firmware on an ESP32, and a numerical inverse kinematics solver running at 50Hz.',    tags: ['C++', 'ESP32', 'PCA9685', 'I2C', 'Inverse Kinematics', 'Servo Control', 'Embedded Systems', 'Mechanical Design'],    
+    writeup: [
+      'A Stewart platform is a parallel robotic manipulator capable of motion in all six degrees of freedom: translation in x, y, and z, plus roll, pitch, and yaw. Unlike serial manipulators which chain joints end-to-end, a Stewart platform connects its moving plate to a fixed base through six independent actuated legs, giving it high structural stiffness and precise positional control. This project was built from scratch as a personal testbed for studying robotic kinematics, real-time embedded control, and motion planning ahead of my honors thesis and capstone work.',
+      'The mechanical design consists of two hexagonal plates connected by six rigid rods, each attached at the base to a servo horn and at the platform end to a ball-and-socket joint. Six RC hobby servos are driven by a PCA9685 16-channel PWM driver over I2C at 400 kHz, with the ESP32 microcontroller running at 240 MHz. Each servo has individually calibrated minimum and maximum pulse widths to account for unit-to-unit variation, and an inversion flag to handle the alternating physical orientation of servos around the base ring.',
+      'The inverse kinematics solver takes a desired 6-DOF pose represented as a translation and ZYX Euler rotation and computes the required horn angle for each of the six servos. Rather than a closed-form solution, the solver performs a numerical sweep over the valid angle range at 0.1° resolution, selecting the angle that minimizes the residual between the actual and target rod length. A pose is accepted only if all six legs solve within a 0.5mm tolerance; otherwise motion is aborted. The solver runs comfortably within the 20ms update budget on the ESP32.',
+      'Smooth trajectories are achieved through linear pose interpolation at 50 Hz. The current pose and target pose are interpolated over N steps, with IK solved at each intermediate pose. Two continuous motion sequences were implemented: a flat circular precession where the platform centroid traces a horizontal circle, and an angled gyroscopic precession that combines translational and angular circular motion to simulate a precessing gyroscope.',
+      'The firmware is structured into well-separated layers from I2C primitives up to named motion sequences, making the codebase straightforward to extend. Future work includes deriving a closed-form IK solution for reduced latency, implementing S-curve velocity profiles to eliminate endpoint discontinuities, and mounting an IMU to close the control loop for active stabilization.',
+    ],
+    media: [
+      { type: 'youtube', src: 'mbAALNDvm3M', alt: 'Servo-Actuated Stewart Platform — 6 DOF Demonstration' },
+      { type: 'image', src: 'media/SP_Housing1.png', alt: 'Servo-Actuated Stewart Platform — Housing' },
+      { type: 'image', src: 'media/SP_Housing2.png', alt: 'Servo-Actuated Stewart Platform — Lid Removed' },
+    ],
+    pdf: 'pdfs/Servo_Actuated_Stewart_Platform.pdf',
     pdfLabel: 'PDF — coming soon',
   },
 
@@ -47,60 +99,11 @@ const PROJECTS = [
       'The next steps are to turn miss distance into an actual probability of collision from the combined covariance, and automatically planning an avoidance maneuver once a conjunction is confirmed. These are scaffolded in the code but not yet coded. At the moment I am currently deciding how avoidance maneuvers should be decided. The most obvious approach is to raise and lower satellite altitudes similarly to TCAS commands in airplanes. This would be most efficient if done half a period before the conjunction via a prograde/retrograde burn. If a conjunction comes up later than half a period before conjunction, radial in/out burns would be advantageous, though more aggressive in orbit deformation, likely having to be undone later on. Another solution would be to change inclination through a normal/antinormal burn but this could more easily set the satellite on a trajectory that intersects other orbits. I am currently debating what the best way to approach this planning may be. Maneuver commands will be sent through the already integrated \'maneuver\' queue parametrized by burn duration, vector direction and start time. The thrust acceleration will likely be a satellite attribute and will be based on standard hall-effect engine thrusts and telecommunication satellite masses.',
     ],
     media: [
-      {type: 'image', src: 'media/orbitsim-EKF1.png', alt: 'EKF tracker estimate vs. ground truth (x/y/z) with 3σ bounds. Assumes excessive process noise.', layout: 'half'},
-      {type: 'image', src: 'media/orbitsim-EKF2.png', alt: 'EKF estimate converging after an intentionally poor initial velocity guess with more realistic process noise used.', layout: 'half'},
+      {type: 'image', src: 'media/orbitsim-EKF1.png', alt: 'EKF tracker estimate vs. ground truth (x/y/z) with 3σ bounds. Assumes excessive process noise.'},
+      {type: 'image', src: 'media/orbitsim-EKF2.png', alt: 'EKF estimate converging after an intentionally poor initial velocity guess with more realistic process noise used.'},
     ],
     pdf: null,
     pdfLabel: 'Report — coming soon',
-  },
-
-  {
-    id: 'shell',
-    title: 'SHELL Docking Tunnel',
-    fullTitle: 'SHELL — Softgoods Habitat Entry & Lunar Logistics',
-    date: 'May 2026',
-    progress: 100,
-    image: 'media/shell-shell.png',
-    heroImage: 'media/shell-shell2.png',
-    summary: '6DOF softgoods articulating docking tunnel with embedded IK, stepper control, and real-time vision pipeline.',
-    tags: ['C++', 'Arduino', 'Python', 'OpenCV', 'ROS', 'Stewart Platform IK', 'Serial Comms', 'SE(3) Transforms', 'AccelStepper Library'],
-    writeup: [
-      'SHELL (Softgoods Habitat Entry and Lunar Logistics) was a 20-person senior capstone project developing an eighth-scale prototype of a pressurized, articulating softgoods docking tunnel designed for crew transfer between habitats and rovers on the lunar and Martian surface. The tunnel is driven by a cable-actuated Stewart platform mechanism, enabling full six-degree-of-freedom motion of the docking hatch.',
-      'I owned the complete embedded software stack. Motor control was implemented in C++ on an Arduino Mega 2560, commanding six NEMA 17 closed-loop stepper motors through dedicated stepper drivers. Each motor drove a cable spool through a 20:1 planetary gearbox, yielding an effective linear resolution of approximately 0.008 mm per step — critical for the precision required in docking maneuvers. All six motors were coordinated simultaneously using the AccelStepper and MultiStepper libraries, ensuring cables reached their target lengths in unison and avoiding slack.',
-      'Communication between the embedded controller and the host computer was handled over USB serial at 115200 baud. A Python-based trajectory generation program computed desired end-effector poses, converted them to cable lengths via inverse kinematics, and transmitted them to the Arduino as ASCII packets. A blocking acknowledgement scheme ensured sequential commands were executed in order, preventing buffer overrun during long trajectories.',
-      'I also developed the real-time vision pipeline using OpenCV and ROS. The system detected AprilTag fiducial markers mounted around the docking hatch rim and estimated the six-degree-of-freedom pose of the hatch relative to the docking platform. Coordinate transformations between the camera frame, tag frame, hatch frame, and platform measurement frame were managed using homogeneous transformation matrices, with the overall pipeline compliant with NASA International Docking System Standard (IDSS) conventions.',
-      'The control system was open-loop — cable lengths were commanded without closed-loop feedback on end-effector pose. Cable spooling inconsistencies introduced length errors on the order of 1–2.5 cm, roughly 5% of nominal cable length, which was acceptable for prototype-level validation. Given additional development time, the vision system would have been integrated as a feedback source for closed-loop pose control.',
-      'Below is an excerpt of my individual contributions from the team\'s full report.'
-    ],
-    media: [
-      { type: 'youtube', src: 'EUqyI62oerk', alt: 'Stewart platform precession demo' },
-    ],
-    pdf: 'pdfs/SHELL_SchneidereithContributions.pdf',
-    pdfLabel: 'PDF — coming soon',
-  },
-
-  {
-    id: 'stewart',
-    title: 'Stewart Platform',
-    fullTitle: 'Servo-Actuated Stewart Platform',
-    date: 'June 2026',
-    progress: 100,
-    image: 'media/stewart-StewartPlatform.png',
-    heroImage: 'media/stewart-StewartPlatform2.png',
-    github: 'https://github.com/SamSchneidereith/stewart-platform',
-    summary: 'Personal 6DOF Stewart platform built from scratch — mechanical design, layered embedded C++ firmware on an ESP32, and a numerical inverse kinematics solver running at 50Hz.',    tags: ['C++', 'ESP32', 'PCA9685', 'I2C', 'Inverse Kinematics', 'Servo Control', 'Embedded Systems', 'Mechanical Design'],    
-    writeup: [
-      'A Stewart platform is a parallel robotic manipulator capable of motion in all six degrees of freedom: translation in x, y, and z, plus roll, pitch, and yaw. Unlike serial manipulators which chain joints end-to-end, a Stewart platform connects its moving plate to a fixed base through six independent actuated legs, giving it high structural stiffness and precise positional control. This project was built from scratch as a personal testbed for studying robotic kinematics, real-time embedded control, and motion planning ahead of my honors thesis and capstone work.',
-      'The mechanical design consists of two hexagonal plates connected by six rigid rods, each attached at the base to a servo horn and at the platform end to a ball-and-socket joint. Six RC hobby servos are driven by a PCA9685 16-channel PWM driver over I2C at 400 kHz, with the ESP32 microcontroller running at 240 MHz. Each servo has individually calibrated minimum and maximum pulse widths to account for unit-to-unit variation, and an inversion flag to handle the alternating physical orientation of servos around the base ring.',
-      'The inverse kinematics solver takes a desired 6-DOF pose represented as a translation and ZYX Euler rotation and computes the required horn angle for each of the six servos. Rather than a closed-form solution, the solver performs a numerical sweep over the valid angle range at 0.1° resolution, selecting the angle that minimizes the residual between the actual and target rod length. A pose is accepted only if all six legs solve within a 0.5mm tolerance; otherwise motion is aborted. The solver runs comfortably within the 20ms update budget on the ESP32.',
-      'Smooth trajectories are achieved through linear pose interpolation at 50 Hz. The current pose and target pose are interpolated over N steps, with IK solved at each intermediate pose. Two continuous motion sequences were implemented: a flat circular precession where the platform centroid traces a horizontal circle, and an angled gyroscopic precession that combines translational and angular circular motion to simulate a precessing gyroscope.',
-      'The firmware is structured into well-separated layers from I2C primitives up to named motion sequences, making the codebase straightforward to extend. Future work includes deriving a closed-form IK solution for reduced latency, implementing S-curve velocity profiles to eliminate endpoint discontinuities, and mounting an IMU to close the control loop for active stabilization.',
-    ],
-    media: [
-      // { type: 'youtube', src: 'EUqyI62oerk', alt: 'Stewart platform precession demo' },
-    ],
-    pdf: 'pdfs/Servo_Actuated_Stewart_Platform.pdf',
-    pdfLabel: 'PDF — coming soon',
   },
 
   // {

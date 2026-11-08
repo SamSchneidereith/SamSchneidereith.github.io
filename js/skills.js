@@ -24,6 +24,12 @@ const SKILLS = [
     projects: ['Coursework'],
   },
   {
+      name: 'freeRTOS',
+      level: 'Intermediate',
+      proficiency: 60,
+      projects: ['Stewart Platform'],
+  },
+  {
     name: 'ROS / OpenCV',
     level: 'Project experience',
     proficiency: 42,
